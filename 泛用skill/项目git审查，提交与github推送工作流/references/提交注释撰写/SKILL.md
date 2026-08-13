@@ -1,0 +1,152 @@
+---
+name: content-commit
+description: 为纯内容仓库（文档/SKILL/笔记/配置）执行 git add + git commit，按 Conventional Commits 规范生成结构化 commit message
+trigger:
+  - "提交改动"
+  - "生成 commit message"
+  - "写提交信息"
+  - "commit"
+---
+
+# content-commit SKILL
+
+## 适用场景
+
+个人维护的内容仓库，仓库中不涉及代码，只有：
+- 文档 / SKILL / README
+- 配置文件
+- 项目结构变更
+
+AI 在执行本 SKILL 前应确保当前目录在对应 git 仓库下。
+
+## 前缀规则
+
+所有 commit message 使用以下 Conventional Commits 子集之一：
+
+| 前缀 | 含意 | 典型场景 |
+|------|------|---------|
+| `docs:` | 文档变更 | 新增/修改/删除 SKILL、知识文档、README |
+| `chore:` | 维护工作 | 配置文件更新、依赖变更、仓库元信息变化 |
+| `refactor:` | 结构调整 | 文件迁移、目录重组、命名调整（不改变内容语义） |
+| `style:` | 格式修正 | Markdown 排版修正、缩进、空格（不改变内容） |
+| `init:` | 首次提交 | 仓库初始化（仅在首次提交时使用） |
+
+选用原则：
+- **`docs:` 优先** — 内容仓库的绝大部分变更属于文档类
+- 只有纯粹的配置文件变更（非文档内容）才使用 `chore:`
+- 只有纯粹的目录/文件结构调整才使用 `refactor:`
+- 只有纯粹的格式调整（如 Markdown lint 修复）才使用 `style:`
+
+## 格式规范
+
+### 标准格式
+
+```
+<类型>: <一句话概括>
+```
+
+- 类型为上述五个之一，**必须带冒号加空格**（`docs:` 而非 ~~`docs`~~）
+- 不超过 50 字
+- 以动词开头（添加 / 更新 / 补充 / 移除 / 修正 / 迁移）
+- 不加句号
+- 不加额外修饰词（不写"优化""完善""改进"等模糊词汇）
+
+示例：
+
+```
+docs: 添加 project-archive SKILL 初版框架
+docs: 更新 knowledge-doc 模板，补充前置条件说明
+docs: 移除过期的 example-config 文件
+refactor: 迁移所有 SKILL 至统一目录结构
+chore: 更新 .gitignore 排除编辑器临时文件
+style: 修正跨 SKILL 的 Markdown 缩进不一致
+```
+
+### 变更较多时（可选）
+
+[body] 区域列出具体改动点，用短横线列表，每行不超过 72 字：
+
+```
+docs: 新增和更新多个文档模块
+
+- 添加 project-archive SKILL 初版框架
+- 更新 knowledge-doc 模板的前置条件说明
+- 修正 README 中过时的目录结构描述
+```
+
+### scope（可选，用于大型仓库）
+
+如果仓库模块较多，可在类型后加括号标注影响范围：
+
+```
+docs(skills): 统一所有 SKILL 的 frontmatter 格式
+chore(config): 更新 ESLint 规则适配新的 Markdown 规范
+```
+
+> 注意：scope 只在内容库模块划分清晰时使用；单一模块的小仓库始终省略 scope。
+
+### 首次提交
+
+```
+init: 初始化 <仓库名>
+```
+
+## 决策逻辑
+
+### 变更跨多种类型时
+
+以**主要变更类型**决定前缀：
+
+1. 按**改动的文件数**统计各类型占比
+2. 文件数接近时，以**改动行数最大的类别**为准
+3. 仍无法判断时，降级为 `docs:` — 内容仓库的保底类型
+
+### 删除单独处理
+
+`docs:` 下的删除（如删除一个过时 SKILL）不需要单独提交，与其他 docs 修改合并即可。
+
+## 执行步骤
+
+### Step 1：暂存改动
+
+```bash
+git add -A
+```
+
+> 信任 `.gitignore`，无需逐一确认文件列表。
+
+### Step 2：获取变更内容
+
+```bash
+git diff --staged
+git status
+```
+
+### Step 3：分析归类
+
+基于 diff 对每个改动文件归类，按前缀决策逻辑确定主类型。
+
+### Step 4：生成 commit message
+
+按格式规范输出一条 commit message。如果变更涉及多个类型，在 body 区域列出每个文件的具体改动。
+
+### Step 5：执行提交
+
+```bash
+git commit -m "<message>"
+```
+
+如果 message 包含 body（多行），使用：
+
+```bash
+git commit -m "<第一行>" -m "<body 内容>"
+```
+
+- 成功 → 告知用户
+- 失败 → **必须**报告具体错误原因，不能跳过
+
+## 注意事项
+
+- 不要编造 diff 中未出现的文件改动
+- 不要主观评价（不加"优化""完善""改进"等模糊词汇）
+- 如果调用方已告知 commit message，以调用方指定的为准，覆盖本规则

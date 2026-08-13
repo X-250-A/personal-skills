@@ -158,22 +158,22 @@ cd <plugin-name>/.. && zip -r <plugin-name>.zip <plugin-name>/
 
 #### plugin.json
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `name` | string | 插件名称，kebab-case 格式，全局唯一标识 |
-| `version` | string | 语义化版本号（semver） |
-| `description` | string | 插件一句话描述 |
+| 字段            | 类型     | 说明                        |
+| ------------- | ------ | ------------------------- |
+| `name`        | string | 插件名称，kebab-case 格式，全局唯一标识 |
+| `version`     | string | 语义化版本号（semver）            |
+| `description` | string | 插件一句话描述                   |
 
 #### manifest.json（skills 数组内每个对象）
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `skillId` | string | skill 标识，**必须**与目录名一致 |
-| `name` | string | skill 显示名称，**必须**与 skillId 一致 |
-| `description` | string | skill 一行描述 |
-| `creatorType` | string | 固定为 `"user"` |
-| `updatedAt` | string | ISO 8601 时间戳 |
-| `enabled` | boolean | 是否默认启用，固定为 `true` |
+| 字段            | 类型      | 说明                            |
+| ------------- | ------- | ----------------------------- |
+| `skillId`     | string  | skill 标识，**必须**与目录名一致         |
+| `name`        | string  | skill 显示名称，**必须**与 skillId 一致 |
+| `description` | string  | skill 一行描述                    |
+| `creatorType` | string  | 固定为 `"user"`                  |
+| `updatedAt`   | string  | ISO 8601 时间戳                  |
+| `enabled`     | boolean | 是否默认启用，固定为 `true`             |
 
 ### SKILL.md 内容规范
 
