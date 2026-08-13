@@ -1,6 +1,7 @@
-名称：content-push
-说明：端到端提交流程——审查项目变更、更新 README（遵循 references/README撰写 规范）、按 Conventional Commits 规范提交、推送至远程仓库
-触发词：
+---
+name: content-push
+description: 端到端提交流程——审查项目变更、更新 README（遵循 references/README撰写 规范）、按 Conventional Commits 规范提交、推送至远程仓库。当用户要求提交项目、推送、发布、走提交流程时使用
+trigger:
   - "提交项目"
   - "帮我推送"
   - "走一遍提交流程"
@@ -44,6 +45,15 @@ git diff
 - 删除了什么文件
 - 是否有目录/配置层面的结构变更
 
+### 删除类变更确认（必须）
+
+**如果有任何文件被删除（`git status` 中出现 `deleted:`）**，在继续流程之前：
+1. 列出所有被删除的文件路径
+2. 告知用户删除原因（低频/过时/被替换）
+3. **必须获得用户明确确认后才能继续**。未确认前不得进入 Step 2/3
+
+> 删除是不可逆操作（虽然 git 历史可恢复，但工作区内容无法找回），必须由用户拍板。
+
 ### 首次提交判断
 
 如果 `git diff` 输出为空，但 `git status` 显示有 untracked files，说明是仓库初始化的首次添加场景——**继续流程**而非提前结束。
@@ -54,11 +64,11 @@ git diff
 
 ## Step 2：更新 README
 
-遵循 **references/README撰写** SKILL 的规范执行。重点参考以下原则：
+遵循 **references/README撰写/README规范.md** 的规范执行。重点参考以下原则：
 
 - **判断是否需要更新**：项目新增了模块/功能文档 → 补充入口链接；描述与现状不符 → 修正；README 已最新 → 跳过此步
 - **内容依项目类型适配**：当前仓库为纯内容仓库（文档/SKILL），按适配版结构执行（跳过快速开始、配置说明、API 文档等代码板块）
-- **编造防范**：用户未提供的信息按兜底处理，禁止编造。reference SKILL 中有完整的编造防范规则
+- **编造防范**：用户未提供的信息按兜底处理，禁止编造。README规范.md 中有完整的编造防范规则
 
 更新完成后**告知用户 README 做了哪些修改**。
 
@@ -66,7 +76,7 @@ git diff
 
 ## Step 3：提交变更
 
-遵循 **references/提交注释撰写** SKILL 的规范执行。
+遵循 **references/提交注释撰写/提交注释规范.md** 的规范执行。
 
 核心规则摘要如下：
 
@@ -101,6 +111,15 @@ git commit -m "<message>"
 ```bash
 git commit -m "<类型>: 一句话" -m "- 改动点1\n- 改动点2"
 ```
+
+### 提交前确认（必须）
+
+**执行 `git commit` 之前**：
+1. 展示拟提交的完整 commit message（含类型前缀与 body）
+2. 简要说明类型判定依据（哪些文件归入该类型）
+3. **必须获得用户确认后才能执行 commit**。用户要求修改时按意见调整后重新展示
+
+> commit message 是给协作者（含未来的自己）看的，宁可多一轮确认，不提交用户不满意的信息。
 
 失败时必须报告具体错误原因。
 
@@ -139,11 +158,12 @@ git push --set-upstream origin <分支名>
 ## 流程概览
 
 ```
-1. git status / git diff → 审查变更（含首次提交判断）
+1. git status / git diff → 审查变更（含删除确认 + 首次提交判断）
 2. 按 references/README撰写 规范更新 README（如需）
-3. 按 references/提交注释撰写 规范执行 git add + git commit
+3. 按 references/提交注释撰写 规范生成 message → 展示并确认 → git add + git commit
 4. git pull --rebase（有 upstream 时）
 5. git push
 
 任何步骤出错 → 告知用户具体错误，不跳过
+删除文件 / commit message → 必须先获得用户确认
 ```

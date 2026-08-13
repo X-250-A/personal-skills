@@ -1,9 +1,6 @@
----
-name: content-repo-readme
-description: 为纯内容仓库（文档/SKILL/笔记/配置）撰写或更新 README——面向文档索引和导航，而非代码项目
----
+# README 撰写规范（内容仓库版）
 
-# content-repo-readme SKILL
+本文件是 content-push 的参考规范，不独立注册为技能。供 content-push 执行 Step 2 时按需加载。
 
 ## 适用仓库类型
 
