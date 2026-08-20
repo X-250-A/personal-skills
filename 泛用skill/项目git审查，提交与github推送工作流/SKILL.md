@@ -64,7 +64,7 @@ git diff
 
 ## Step 2：更新 README
 
-遵循 **references/README撰写/README规范.md** 的规范执行。重点参考以下原则：
+遵循 **`references/README撰写/README规范.md`** 的规范执行。重点参考以下原则：
 
 - **判断是否需要更新**：项目新增了模块/功能文档 → 补充入口链接；描述与现状不符 → 修正；README 已最新 → 跳过此步
 - **内容依项目类型适配**：当前仓库为纯内容仓库（文档/SKILL），按适配版结构执行（跳过快速开始、配置说明、API 文档等代码板块）
@@ -76,7 +76,7 @@ git diff
 
 ## Step 3：提交变更
 
-遵循 **references/提交注释撰写/提交注释规范.md** 的规范执行。
+遵循 **`references/提交注释撰写/提交注释规范.md`** 的规范执行。
 
 核心规则摘要如下：
 
@@ -167,3 +167,12 @@ git push --set-upstream origin <分支名>
 任何步骤出错 → 告知用户具体错误，不跳过
 删除文件 / commit message → 必须先获得用户确认
 ```
+
+---
+
+## 相关
+
+- **想法可行性的压力测试** —— 同属通用思维工具
+- **project-architecture**（项目架构文档撰写）—— 内容仓库变更后可联动更新架构文档
+- **prompt-writing**（prompt撰写）—— 技能自身 Prompt 编写参考
+- 仓库总览见根目录 `README.md`

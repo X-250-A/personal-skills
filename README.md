@@ -1,6 +1,6 @@
 # personal-skills
 
-personal-skills 是一个个人技能仓库，收集了一套可为 Claude Desktop（Cowork 模式）加载的自定义技能（skill）。每个技能是一个独立的**文件夹 + SKILL.md** 结构，以 YAML 前置元数据（frontmatter）声明技能名称和触发条件，正文为 AI 提供执行特定任务的完整工作流指引。
+personal-skills 是一个个人技能仓库，遵循 **Agent Skills 开放规范**（文件夹 + SKILL.md 结构，YAML frontmatter 声明技能名称与触发条件，正文为 AI 提供执行特定任务的完整工作流指引）。技能**跨平台可移植**，可被任何支持 SKILL.md 技能的 AI 助手（Claude Desktop、Hermes Agent、Claude Code 等）加载使用。
 
 本仓库目前包含 **4 个技能**，覆盖两大类场景：
 
@@ -9,7 +9,7 @@ personal-skills 是一个个人技能仓库，收集了一套可为 Claude Deskt
 
 每个技能采用**主文件 + references 按需加载**的结构：SKILL.md 只放流程、模板与约束，完整示例与详细模板放在 `references/` 目录下，模型执行时按需加载，既保证约束不丢失，又避免主文件臃肿稀释注意力。
 
-每个技能自包含，不依赖外部脚本或配置；放在 Cowork 的技能搜索路径下即可被自动识别和加载。
+每个技能自包含，不依赖外部脚本或配置；放入支持 Agent Skills 规范的 AI 助手的技能搜索路径下即可被自动识别和加载。
 
 ---
 
@@ -17,7 +17,7 @@ personal-skills 是一个个人技能仓库，收集了一套可为 Claude Deskt
 
 | 依赖项            | 要求                      | 说明                   |
 | -------------- | ----------------------- | -------------------- |
-| Claude Desktop | 最新稳定版                   | 需启用 Cowork 模式以支持技能加载 |
+| AI 助手          | 支持 SKILL.md 技能加载机制     | 如 Claude Desktop（Cowork 模式）、Hermes Agent 等 |
 | 操作系统           | Windows / macOS / Linux | 无特殊限制                |
 | 文本编辑器          | 任意                      | 用于编辑或新增 SKILL.md 文件  |
 
@@ -40,26 +40,34 @@ ls -R
 # 文档撰写/      —— 2 个文档撰写类技能
 ```
 
-**3. 在 Claude Desktop 中注册技能**
+**3. 在 AI 助手中注册技能**
 
-将本仓库根目录路径添加为技能来源目录。Claude Desktop 启动时会递归扫描该路径下的所有 `skills/` 子目录，解析 `SKILL.md` 中的 frontmatter 并自动注册。
+将本仓库根目录添加为技能来源目录。支持 Agent Skills 规范的助手（如 Claude Desktop、Hermes Agent）会在启动时递归扫描该路径，查找 `SKILL.md` 文件并解析 frontmatter 自动注册。各助手的具体配置方式见下文「安装指南」。
 
 **4. 验证技能已加载**
 
-在 Claude Desktop 对话中说出的触发短语。例如输入"帮我评测一下这个想法"，Claude 应自动加载压力测试技能并引导你完成分析。
+在 AI 助手的对话中说出的触发短语。例如输入"帮我评测一下这个想法"，助手应自动加载压力测试技能并引导你完成分析。
 
 ---
 
 ## 安装指南
 
-技能通过 Claude Desktop 的技能目录机制加载。将本仓库放置在任意路径后，在 Claude Desktop 的技能设置中将该路径添加到技能搜索目录列表。
+### Claude Desktop（Cowork 模式）
+
+将本仓库放置在任意路径后，在 Claude Desktop 的技能设置中将该路径添加到技能搜索目录列表。Claude Desktop 启动时会递归扫描该目录及其子目录，查找 `SKILL.md` 文件并解析其 YAML frontmatter。技能的识别依据是所在文件夹名称（作为技能 ID）和 frontmatter 中的 `description` 字段（作为触发匹配依据）。
 
 ```
 技能来源路径示例：
 /path/to/personal-skills
 ```
 
-Claude Desktop 启动时会递归扫描该目录及其子目录，查找 `SKILL.md` 文件并解析其 YAML frontmatter。技能的识别依据是所在文件夹名称（作为技能 ID）和 frontmatter 中的 `description` 字段（作为触发匹配依据）。
+### Hermes Agent
+
+将技能文件夹（或其分类父目录）复制到 Hermes 的 skills 目录（如 `~/AppData/Local/hermes/skills/`）下，重启会话后自动识别；也可在 Hermes 中通过 skill 管理命令导入。注意 Hermes 解析的是 `references/xxx.md` 形式的普通相对路径引用（本仓库已采用该格式，无需额外适配）。
+
+### 其他支持 Agent Skills 规范的助手
+
+参考对应助手的技能加载文档，将仓库根目录注册为技能来源即可。本仓库所有技能自包含、无外部依赖，格式遵循通用规范，无需针对特定助手改造。
 
 ### 从源码安装
 
@@ -76,41 +84,41 @@ git clone git@github.com:X-250-A/personal-skills.git
 
 **场景**：你有一个产品方案，想在推进前找出潜在问题。
 
-在 Claude Desktop 中输入：
+在 AI 助手中输入：
 
 > 帮我评测一下这个想法：我想做一个面向大学生的 AI 写作助手，按月付费。
 
-Claude 加载"想法可行性的压力测试"技能，从核心假设、逻辑漏洞、边界条件、实施障碍、替代方案、二阶效应等维度系统性地审视方案，给出改进建议和风险评估。快速/标准/深入三种模式按问题规模自动匹配，完整示例按需加载 `references/examples-*.md`。
+助手加载"想法可行性的压力测试"技能，从核心假设、逻辑漏洞、边界条件、实施障碍、替代方案、二阶效应等维度系统性地审视方案，给出改进建议和风险评估。快速/标准/深入三种模式按问题规模自动匹配，完整示例按需加载 `references/examples-*.md`。
 
 ### 示例 2：提交内容仓库
 
 **场景**：你更新了本仓库的 skill 文件，想按规范提交并推送。
 
-在 Claude Desktop 中输入：
+在 AI 助手中输入：
 
 > 提交项目
 
-Claude 加载"项目git审查，提交与github推送工作流"技能，按"审查改动 → 更新 README → 规范提交 → pull --rebase → 推送"五步流程执行，commit message 遵循 Conventional Commits 规范（`docs:` 优先）。
+助手加载"项目git审查，提交与github推送工作流"技能，按"审查改动 → 更新 README → 规范提交 → pull --rebase → 推送"五步流程执行，commit message 遵循 Conventional Commits 规范（`docs:` 优先）。
 
 ### 示例 3：撰写项目架构文档
 
 **场景**：你有一个项目，想产出面向开发者的架构设计文档。
 
-在 Claude Desktop 中输入：
+在 AI 助手中输入：
 
 > 帮我写一份这个项目的架构文档，深入讲模块设计和设计决策
 
-Claude 加载"项目架构文档撰写"技能，确认项目类型（Web/前端/CLI/库/数据/嵌入式）与写作模式（交互/一次性/快速骨架），按 10 章节结构输出；章节完整模板在 `references/chapter-templates.md` 按需加载。
+助手加载"项目架构文档撰写"技能，确认项目类型（Web/前端/CLI/库/数据/嵌入式）与写作模式（交互/一次性/快速骨架），按 10 章节结构输出；章节完整模板在 `references/chapter-templates.md` 按需加载。
 
 ### 示例 4：撰写或优化 Prompt
 
 **场景**：你需要一个结构化 Prompt，或想优化现有的 prompt。
 
-在 Claude Desktop 中输入：
+在 AI 助手中输入：
 
 > 帮我写一个生成 API 文档的 prompt
 
-Claude 加载"prompt撰写"技能，按 7 组件结构（角色/任务/输入/输出/约束/示例/异常处理）输出完整 Prompt；经迭代验证的完整示例在 `references/examples-tech.md`、`references/examples-optimize.md` 按需加载。
+助手加载"prompt撰写"技能，按 7 组件结构（角色/任务/输入/输出/约束/示例/异常处理）输出完整 Prompt；经迭代验证的完整示例在 `references/examples-tech.md`、`references/examples-optimize.md` 按需加载。
 
 ---
 
@@ -123,7 +131,7 @@ Claude 加载"prompt撰写"技能，按 7 组件结构（角色/任务/输入/�
 | 字段            | 类型       | 必填  | 说明                               |
 | ------------- | -------- | --- | -------------------------------- |
 | `name`        | string   | 是   | 技能标识名，支持中文、英文或 kebab-case        |
-| `description` | string   | 是   | 触发条件描述，Claude Desktop 将此文本作为匹配依据 |
+| `description` | string   | 是   | 触发条件描述，AI 助手将此文本作为匹配依据 |
 | `trigger`     | string[] | 否   | 额外的触发短语列表，提高匹配准确度（仅部分技能使用）       |
 
 示例（来自 `想法可行性的压力测试/SKILL.md`）：
@@ -151,7 +159,7 @@ trigger:
 
 - 文件夹名称为技能标识 ID
 - `SKILL.md` 中包含 YAML frontmatter 和完整的技能指令正文
-- `references/` 存放完整示例、详细模板等扩展资源，主文件通过加载指引引用，模型执行时按需加载——避免主文件臃肿，同时保证约束不丢失
+- `references/` 存放完整示例、详细模板等扩展资源，主文件通过**普通相对路径引用**（如 `references/examples-tech.md`），模型执行时按需加载——避免主文件臃肿，同时保证约束不丢失。该格式在各支持 SKILL.md 的助手中通用，不依赖特定平台的 wiki 链接语法
 
 ---
 
@@ -209,7 +217,7 @@ personal-skills/
 2. 在该文件夹中创建 `SKILL.md` 文件
 3. 编写 YAML frontmatter，至少包含 `name` 和 `description` 两个字段
 4. 正文按技能规范编写：先定义角色，再明确任务流程、输出格式、风格要求、约束条件和触发条件
-5. 完整示例与详细模板放入 `references/` 目录，主文件只写流程与约束，通过加载指引引用
+5. 完整示例与详细模板放入 `references/` 目录，主文件只写流程与约束，通过 `references/xxx.md` 普通相对路径引用
 6. 在 `README.md` 的技能清单和项目结构中补充新条目
 
 ### 修改已有技能
@@ -220,8 +228,9 @@ personal-skills/
 
 - 使用 Markdown 格式，frontmatter 后紧跟空行
 - 技能 `name` 使用有意义的标识：英文技能用 kebab-case，中文技能直接用中文
-- `description` 需包含触发关键词和使用场景，以便 Claude Desktop 准确匹配
+- `description` 需包含触发关键词和使用场景，以便 AI 助手准确匹配
 - 正文自包含：不引用"当前会话"中的临时信息，每条指令应是 AI 可直接执行的明确操作
+- 引用 references 时使用普通相对路径（`references/xxx.md`），不使用平台专属的 wiki 链接语法（如 `[[xxx]]`），保证跨助手可移植
 - 避免使用 emoji（除非技能本身要求）
 
 ### 提交流程
@@ -232,13 +241,13 @@ personal-skills/
 
 ## 常见问题
 
-**问：为什么我新加的技能没有被 Claude Desktop 识别？**
+**问：为什么我新加的技能没有被 AI 助手识别？**
 
-确认：(1) 目录中包含 `SKILL.md` 文件；(2) frontmatter 包含 `name` 和 `description` 字段且格式正确；(3) 文件存放路径在 Claude Desktop 的技能搜索目录范围内；(4) Claude Desktop 已重启以重新扫描。
+确认：(1) 目录中包含 `SKILL.md` 文件；(2) frontmatter 包含 `name` 和 `description` 字段且格式正确；(3) 文件存放路径在对应助手的技能搜索目录范围内；(4) 助手已重启以重新扫描。
 
 **问：多个技能的触发词有重叠怎么办？**
 
-Claude Desktop 的路由逻辑会根据会话上下文选择最匹配的技能。如果多次出现误匹配，可以调整冲突技能的 `description` 字段，使其触发条件更加差异化。也可以添加 `trigger` 数组字段，列出具体的触发短语。
+助手的路由逻辑会根据会话上下文选择最匹配的技能。如果多次出现误匹配，可以调整冲突技能的 `description` 字段，使其触发条件更加差异化。也可以添加 `trigger` 数组字段，列出具体的触发短语。
 
 **问：技能文件能引用外部脚本或配置吗？**
 
@@ -246,15 +255,15 @@ Claude Desktop 的路由逻辑会根据会话上下文选择最匹配的技能�
 
 **问：`references/` 目录的作用是什么？**
 
-`references/` 存放完整示例、详细模板等扩展资源（如压力测试的三模式示例、架构文档的章节模板、Prompt 撰写的完整示例）。主文件通过加载指引引用它们，模型执行时按需加载：既保持主文件精简、避免稀释注意力，又确保输出质量基准不丢失。
+`references/` 存放完整示例、详细模板等扩展资源（如压力测试的三模式示例、架构文档的章节模板、Prompt 撰写的完整示例）。主文件通过普通相对路径引用它们，模型执行时按需加载：既保持主文件精简、避免稀释注意力，又确保输出质量基准不丢失。
 
 **问：能否在技能中引用其他技能？**
 
 技能应为自包含单元，不直接引用其他技能。如果多个技能共享部分逻辑，建议将共性内容抽象为独立技能，或在需要处重复该逻辑。
 
-**问：这些技能和 Claude Code / Claude Agent SDK 有什么关系？**
+**问：这些技能支持哪些 AI 助手？**
 
-这些技能是为 Claude Desktop 的 Cowork 模式设计的，不属于 Claude Code 或 Claude Agent SDK 的功能范畴。它们通过 Cowork 的技能加载机制生效。
+技能遵循 Agent Skills 开放规范（文件夹 + SKILL.md + YAML frontmatter），任何支持该规范的助手均可加载：Claude Desktop（Cowork 模式）、Hermes Agent、Claude Code 等。仓库内容不依赖特定平台特性，迁移时无需改造。
 
 ---
 
@@ -262,6 +271,7 @@ Claude Desktop 的路由逻辑会根据会话上下文选择最匹配的技能�
 
 | 版本    | 日期      | 变更说明                                                                                                    |
 | ----- | ------- | ------------------------------------------------------------------------------------------------------- |
+| 4.0.0 | 2026-08 | 通用化改造：定位从"Claude Desktop 专用"升级为"遵循 Agent Skills 开放规范的可移植技能集"；references 引用从 Obsidian wiki 链接（`[[xxx]]`）迁移为普通相对路径（`references/xxx.md`），实现跨助手拷贝即用 |
 | 3.1.0 | 2026-08 | 精简仓库：移除低频技能 8 个（前端审查 5 件套、本科论文、知识文档、README 撰写、plugin 工作流）；prompt撰写 与 项目架构文档撰写 拆分为"主文件 + references 按需加载"结构 |
 | 3.0.1 | 2026-07 | 更新说明：更新日志补充；修正各SKILL.md中的路径目录名称，使其与仓库实际路径一致 |
 | 3.0.0 | 2026-06 | 重构为文件夹 + SKILL.md 模式；新增"创建plugin工作流"技能；新增"前端审查"系列 5 个技能；整合三大分类：文档撰写(5) / 泛用skill(2) / 前端审查(5)，总计 12 个技能 |

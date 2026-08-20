@@ -1,5 +1,7 @@
 # 完整示例 2：优化已有 Prompt
 
+> 所属技能：prompt-writing
+
 ## 用户输入
 
 > 帮我优化这个 prompt，感觉它输出总是不稳定：

@@ -1,5 +1,7 @@
 # README 撰写规范（内容仓库版）
 
+> 所属技能：content-push
+
 本文件是 content-push 的参考规范，不独立注册为技能。供 content-push 执行 Step 2 时按需加载。
 
 ## 适用仓库类型

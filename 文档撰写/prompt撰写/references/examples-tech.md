@@ -1,5 +1,7 @@
 # 完整示例 1：从零撰写（技术类）
 
+> 所属技能：prompt-writing
+
 ## 用户输入
 
 > 帮我写一个 prompt，用来生成 Python 函数的文档注释。要求输出符合 Google 风格 docstring 格式，包含参数说明、返回值说明和示例。
