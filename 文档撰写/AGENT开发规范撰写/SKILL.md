@@ -26,26 +26,26 @@ trigger:
 ## 模板
 
 ````markdown
-# Sample AGENTS.md file
+# AGENTS.md 示例
 
-## Dev environment tips
-- Use `pnpm dlx turbo run where <project_name>` to jump to a package instead of scanning with `ls`.
-- Run `pnpm install --filter <project_name>` to add the package to your workspace so Vite, ESLint, and TypeScript can see it.
-- Use `pnpm create vite@latest <project_name> -- --template react-ts` to spin up a new React + Vite package with TypeScript checks ready.
-- Check the name field inside each package's package.json to confirm the right name—skip the top-level one.
+## 开发环境提示
+- 用 `pnpm dlx turbo run where <project_name>` 直接跳到某个包，不要用 `ls` 扫。
+- 跑 `pnpm install --filter <project_name>` 把包装进 workspace，这样 Vite、ESLint 和 TypeScript 才能看到它。
+- 用 `pnpm create vite@latest <project_name> -- --template react-ts` 新建一个 React + Vite 包，TypeScript 检查已配好。
+- 核对每个包 package.json 里的 name 字段确认包名，跳过顶层那个。
 
-## Testing instructions
-- Find the CI plan in the .github/workflows folder.
-- Run `pnpm turbo run test --filter <project_name>` to run every check defined for that package.
-- From the package root you can just call `pnpm test`. The commit should pass all tests before you merge.
-- To focus on one step, add the Vitest pattern: `pnpm vitest run -t "<test name>"`.
-- Fix any test or type errors until the whole suite is green.
-- After moving files or changing imports, run `pnpm lint --filter <project_name>` to be sure ESLint and TypeScript rules still pass.
-- Add or update tests for the code you change, even if nobody asked.
+## 测试说明
+- CI 流程在 .github/workflows 目录里找。
+- 跑 `pnpm turbo run test --filter <project_name>` 执行该包定义的全部检查。
+- 在包根目录直接跑 `pnpm test`。合并前提交必须通过全部测试。
+- 只想跑一个步骤时，加 Vitest 过滤：`pnpm vitest run -t "<test name>"`。
+- 测试或类型报错要修到整套全绿。
+- 移动文件或修改 import 后，跑 `pnpm lint --filter <project_name>` 确认 ESLint 和 TypeScript 规则仍通过。
+- 改过的代码要补测试，即使没人要求。
 
-## PR instructions
-- Title format: [<project_name>] <Title>
-- Always run `pnpm lint` and `pnpm test` before committing.
+## PR 说明
+- 标题格式：`[<project_name>] <Title>`
+- 提交前必须跑 `pnpm lint` 和 `pnpm test`。
 ````
 
 ## 反例
