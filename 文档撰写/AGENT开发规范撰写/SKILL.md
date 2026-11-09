@@ -21,65 +21,31 @@ trigger:
 - 模板字段非必填，要根据项目实际自行增减标题
 - 命令必须先跑通再写，禁止凭印象编
 - 命令写到能直接复制的程度，带项目特有的参数、过滤、路径，不要只写入口命令
-- 起服务前缺什么就写进前置：数据库、缓存、模型、密钥、首次下载
-- 经验性的东西一句话一条放 Tips，不要展开成段落
-- 信源也放 Tips：配置、日志、CI 在哪，直接给路径
-- 边界只写不要做什么，不写原因
+- 信源直接给路径：配置、日志、CI 在哪
 
 ## 模板
 
 ````markdown
-请你在开发时遵循以下规范以保证开发体验：
+# Sample AGENTS.md file
 
-## 1. 开发规范
+## Dev environment tips
+- Use `pnpm dlx turbo run where <project_name>` to jump to a package instead of scanning with `ls`.
+- Run `pnpm install --filter <project_name>` to add the package to your workspace so Vite, ESLint, and TypeScript can see it.
+- Use `pnpm create vite@latest <project_name> -- --template react-ts` to spin up a new React + Vite package with TypeScript checks ready.
+- Check the name field inside each package's package.json to confirm the right name—skip the top-level one.
 
-**代码规范**
+## Testing instructions
+- Find the CI plan in the .github/workflows folder.
+- Run `pnpm turbo run test --filter <project_name>` to run every check defined for that package.
+- From the package root you can just call `pnpm test`. The commit should pass all tests before you merge.
+- To focus on one step, add the Vitest pattern: `pnpm vitest run -t "<test name>"`.
+- Fix any test or type errors until the whole suite is green.
+- After moving files or changing imports, run `pnpm lint --filter <project_name>` to be sure ESLint and TypeScript rules still pass.
+- Add or update tests for the code you change, even if nobody asked.
 
-- <能判对错的规则>
-
-**依赖管理**
-
-- <项目管理依赖的方式>
-
-**测试事项**
-
-- <端>，跑 <命令>
-
-## 2. 常用命令
-
-**前置**
-
-- <起服务前必须先有的东西>
-
-**启动**
-
-```bash
-<命令>    # 一句话作用
-```
-
-**测试**
-
-```bash
-<命令>    # 一句话作用
-```
-
-**新增**
-
-```bash
-<命令>    # 一句话作用
-```
-
-## 3. 提交
-
-- <提交前必须跑什么，是否允许自动提交>
-
-## 4. 边界
-
-- <不要做什么>
-
-## 5. Tips
-
-- <踩过的坑，一句话一条>
+## PR instructions
+- Title format: [<project_name>] <Title>
+- Always run `pnpm lint` and `pnpm test` before committing.
 ````
 
 ## 反例
